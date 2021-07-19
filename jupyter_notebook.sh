@@ -1,12 +1,19 @@
 #!/bin/bash
 
-function main {
-	set_up && jupyter notebook
-	tear_down
+function init {
+	set -e
+	trap tear_down EXIT
+
+	start_mysql
+	import_anonymous_data
 }
 
-function set_up {
-	start_mysql && import_anonymous_data
+function main {
+	jupyter notebook
+}
+
+function tear_down {
+	docker-compose down
 }
 
 function start_mysql {
@@ -35,16 +42,11 @@ function import_anonymous_data {
 	rm -r ${TMP_DIR}
 }
 
-function tear_down {
-	docker-compose down
-}
-
 function exec_mysql {
 	docker-compose exec -T mysql mysql --user=root --password=secret "$@"
 	
 }
 
-set -e
-trap tear_down EXIT
-
+init
 main
+tear_down
