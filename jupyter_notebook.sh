@@ -38,13 +38,14 @@ function import_anonymous_data {
 	exec_mysql -e "LOAD DATA LOCAL INFILE 'user.csv' INTO TABLE user \
 	               FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' \
 	               IGNORE 1 ROWS;" serlo
-
+	echo "Let's wait for the postgres database to be ready"
+	sleep 30
+	docker-compose exec -T postgres psql --user serlo kratos < "${TMP_DIR}/kratos.sql"
 	rm -r ${TMP_DIR}
 }
 
 function exec_mysql {
 	docker-compose exec -T mysql mysql --user=root --password=secret "$@"
-	
 }
 
 init

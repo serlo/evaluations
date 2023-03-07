@@ -9,3 +9,14 @@ services:
       - "33060:33060"
     environment:
       - MYSQL_ROOT_PASSWORD=secret
+  postgres:
+    platform: linux/amd64
+    image: postgres:9.6
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=serlo
+      - POSTGRES_PASSWORD=secret
+      - PGPASSWORD=secret
+      - POSTGRES_DB=kratos
+      
