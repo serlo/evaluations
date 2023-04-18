@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pandas as pd
@@ -7,18 +8,17 @@ import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
+import os
 import plotly
 import plotly.graph_objs as go
 import plotly.express as px
 
-
-
+load_dotenv('./src/KPI_App/.env.local')
 
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="secret",
-    port="3306",
+    host=os.getenv("MYSQL_HOST"),
+    user=os.getenv("MYSQL_USER"),
+    password=os.getenv("MYSQL_PASSWORD"),
     database="serlo",
     charset="latin1"
 )
