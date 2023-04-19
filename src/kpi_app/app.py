@@ -13,7 +13,7 @@ import plotly
 import plotly.graph_objs as go
 import plotly.express as px
 
-load_dotenv('./src/KPI_App/.env.local')
+load_dotenv('./src/kpi_app/.env.local')
 
 db = mysql.connector.connect(
     host=os.getenv("MYSQL_HOST"),
