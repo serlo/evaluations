@@ -118,12 +118,13 @@ def read_event_log_edits():
 
 event_log_edits = read_event_log_edits()
 
-
-
-
-
 # Connect to the database
-user_db = psycopg2.connect(database='kratos', host='localhost', user='serlo', password='secret')
+user_db = psycopg2.connect(
+    host=os.getenv("POSTGRES_HOST"),
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
+    database='kratos'
+)
 
 # Define a function to execute SQL queries
 def user_query(sql):
