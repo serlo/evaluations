@@ -706,36 +706,36 @@ def update_figure(var_1, var_2):
 
 
 def create_figure_Inhalte(interest="all"):
-    figure = px.line(x=one_year_dates(days=365),
-                     y=[Anzahl_erstellter_Inhalte(days2=i, interest=interest)
-                        for i in new_range(days=365)],
-                     title='erstellte Inhalte / 90 Tage')
-    figure.update_layout(plot_bgcolor='#ECF2FF', paper_bgcolor='#ECF2FF')
+    figure = px.line(
+        x=one_year_dates(days=365),
+        y=[
+            Anzahl_erstellter_Inhalte(days2=i, interest=interest)
+            for i in new_range(days=365)
+        ],
+        title="erstellte Inhalte / 90 Tage",
+    )
+    figure.update_layout(plot_bgcolor="#ECF2FF", paper_bgcolor="#ECF2FF")
     return figure
 
 
-@app.callback(
-    Output('graph_3', 'figure'),
-    [Input("interest-selector", 'value')]
-)
+@app.callback(Output("graph_3", "figure"), [Input("interest-selector", "value")])
 def update_figure(var):
     figure = create_figure_Inhalte(var)
 
     return figure
 
 
-graph_Row = dbc.Row([dbc.Col(graph1, md=4), dbc.Col(graph2, md=4), dbc.Col(graph3, md=4)])
+graph_Row = dbc.Row(
+    [dbc.Col(graph1, md=4), dbc.Col(graph2, md=4), dbc.Col(graph3, md=4)]
+)
 
 app.layout = html.Div(
-
     [header, KPI_Row, graph_Row],
-
-    style={'backgroundColor': 'white'}
+    style={"backgroundColor": "white"}
     # style={'backgroundColor':'#F7C8E0'}
-
 )
 
 
 # Run the app
-if __name__ == '__main__':
-    app.run_server()
+if __name__ == "__main__":
+    app.run_server(debug=True)

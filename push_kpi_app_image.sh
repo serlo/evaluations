@@ -1,4 +1,4 @@
-version=0.2
+version=0.3
 
 image=eu.gcr.io/serlo-shared/kpi-dashboard:$version
 
