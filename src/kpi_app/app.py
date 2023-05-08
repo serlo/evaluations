@@ -45,13 +45,13 @@ def query(sql):
     return c.fetchall()
 
 
-def querySingleton(sql):
+def query_singleton(sql):
     return [x[0] for x in query(sql)]
 
 
 @cached
-def getParent(termId):
-    return querySingleton(
+def get_parent(termId):
+    return query_singleton(
         """
         select parent_id from term_taxonomy where id = %s;
     """
@@ -59,8 +59,8 @@ def getParent(termId):
     )[0]
 
 
-def getTermName(termId):
-    return querySingleton(
+def get_term_name(termId):
+    return query_singleton(
         """
         select term.name from term_taxonomy
         join term on term.id = term_taxonomy.term_id
@@ -71,7 +71,7 @@ def getTermName(termId):
 
 
 @cached
-def getSubject(termId):
+def get_subject(termId):
     if int(termId) in [
         79733,
         81317,
@@ -89,38 +89,38 @@ def getSubject(termId):
     ]:
         return "Prüfungsbereich Mathematik"
     if int(termId) in [106082]:
-        return getTermName(termId)
+        return get_term_name(termId)
 
-    parent = getParent(termId)
-    grandparent = getParent(parent)
+    parent = get_parent(termId)
+    grandparent = get_parent(parent)
 
     if parent == 106081:
-        return getTermName(termId)
+        return get_term_name(termId)
 
-    return getSubject(parent) if grandparent != None else getTermName(termId)
+    return get_subject(parent) if grandparent != None else get_term_name(termId)
 
 
 @cached
-def getSubjectFromUuid(uuid):
-    taxonomyTerms = querySingleton(
+def get_subject_from_uuid(uuid):
+    taxonomy_terms = query_singleton(
         f"""
         select term_taxonomy_id from term_taxonomy_entity
         where term_taxonomy_entity.entity_id  = {uuid};
-    """
+        """
     )
 
-    if len(taxonomyTerms) > 0:
-        return getSubject(taxonomyTerms[0])
+    if len(taxonomy_terms) > 0:
+        return get_subject(taxonomy_terms[0])
 
-    parents = querySingleton(
+    parents = query_singleton(
         f"""
         select parent_id from entity_link
         where entity_link.child_id  = {uuid};
-    """
+        """
     )
 
     if len(parents) > 0:
-        return getSubjectFromUuid(parents[0])
+        return get_subject_from_uuid(parents[0])
 
     return None
 
@@ -135,18 +135,17 @@ def read_event_log_edits():
         where event_log.event_id = 5
         and year(event_log.date) > 2018
         and user.username != "Legacy"
-    """,
+        """,
         db,
     )
     df.set_index("id", inplace=True)
     df.rename(columns={"uuid_id": "uuid"}, inplace=True)
-    df["subject"] = df["uuid"].map(getSubjectFromUuid)
+    df["subject"] = df["uuid"].map(get_subject_from_uuid)
     return df
 
 
 event_log_edits = read_event_log_edits()
 
-# Connect to the database
 user_db = psycopg2.connect(
     host=os.getenv("POSTGRES_HOST"),
     user=os.getenv("POSTGRES_USER"),
@@ -155,23 +154,18 @@ user_db = psycopg2.connect(
 )
 
 
-# Define a function to execute SQL queries
-def user_query(sql):
+def query_users(sql):
     cursor = user_db.cursor()
     cursor.execute(sql)
     return cursor.fetchall()
 
 
-# Execute the SQL query to select the desired columns from the "identities" table
-results = user_query(
+results = query_users(
     "SELECT traits ->> 'username', (metadata_public ->> 'legacy_id')::int, traits ->> 'interest' FROM identities;"
 )
 
-# Convert the results to a pandas dataframe
 df = pd.DataFrame(results, columns=["username", "legacy_id", "interest"])
 
-
-# Führe den Join durch und speichere das Ergebnis in einer neuen Variablen
 merged_df_edits = pd.merge(
     event_log_edits, df, left_on="actor_id", right_on="legacy_id"
 )
@@ -180,7 +174,7 @@ merged_df_edits = merged_df_edits.rename(columns={"username_x": "username"})
 merged_df_edits
 
 
-def Anzahl_Autorinnen(
+def get_number_of_authors(
     days=90, edits=10, week=0, year=0, days2=0, interest="all", subject="all"
 ):
     lower_date = pd.Timestamp.today() - pd.Timedelta(
@@ -209,7 +203,7 @@ def Anzahl_Autorinnen(
     return df4[df4.isActive == 1].actor_id.count()
 
 
-def Anzahl_aller_Bearbeitungen(
+def get_number_of_all_edits(
     days=90, week=0, year=0, days2=0, interest="all", subject="all"
 ):
     lower_date = pd.Timestamp.today() - pd.Timedelta(
@@ -277,7 +271,7 @@ merged_df_contents = merged_df_contents.rename(columns={"username_x": "username"
 merged_df_contents
 
 
-def Anzahl_erstellter_Inhalte(days=90, week=0, year=0, days2=0, interest="all"):
+def get_number_of_created_contents(days=90, week=0, year=0, days2=0, interest="all"):
     lower_date = pd.Timestamp.today() - pd.Timedelta(
         days=days + days2 + week * 7 + year * 365
     )
@@ -439,8 +433,8 @@ def create_card(title, content1, content2):
     return card
 
 
-def create_card_Autorinnen(edits=10, interest="all", subject="all"):
-    var_1 = Anzahl_Autorinnen(
+def create_card_authors(edits=10, interest="all", subject="all"):
+    var_1 = get_number_of_authors(
         days=90,
         edits=edits,
         week=0,
@@ -449,7 +443,7 @@ def create_card_Autorinnen(edits=10, interest="all", subject="all"):
         interest=interest,
         subject=subject,
     )
-    var_2 = Anzahl_Autorinnen(
+    var_2 = get_number_of_authors(
         days=90,
         edits=edits,
         week=0,
@@ -593,7 +587,7 @@ card3 = html.Div(id="card-output_3")
     ],
 )
 def update_card_1(edit_selector_value, interest_selector_value, subject_selector_value):
-    card = create_card_Autorinnen(
+    card = create_card_authors(
         edit_selector_value, interest_selector_value, subject_selector_value
     )
     return card
@@ -606,10 +600,10 @@ def update_card_1(edit_selector_value, interest_selector_value, subject_selector
 def update_card_2(var_1, var_2):
     card = create_card(
         "Bearbeitungen",
-        Anzahl_aller_Bearbeitungen(
+        get_number_of_all_edits(
             days=90, week=0, year=0, days2=0, interest=var_1, subject=var_2
         ),
-        Anzahl_aller_Bearbeitungen(
+        get_number_of_all_edits(
             days=90, week=0, year=1, days2=0, interest=var_1, subject=var_2
         ),
     )
@@ -622,13 +616,13 @@ def update_card_2(var_1, var_2):
 def update_card_3(var):
     card = create_card(
         "erstellte Inhalte",
-        Anzahl_erstellter_Inhalte(days=90, week=0, year=0, days2=0, interest=var),
-        Anzahl_erstellter_Inhalte(days=90, week=0, year=1, days2=0, interest=var),
+        get_number_of_created_contents(days=90, week=0, year=0, days2=0, interest=var),
+        get_number_of_created_contents(days=90, week=0, year=1, days2=0, interest=var),
     )
     return card
 
 
-KPI_Row = dbc.Row(
+kpi_row = dbc.Row(
     [
         dbc.Col(id="card1", children=[card1], md=4),
         dbc.Col(id="card2", children=[card2], md=4),
@@ -655,11 +649,13 @@ graph2 = dcc.Graph(id="graph_2")
 graph3 = dcc.Graph(id="graph_3")
 
 
-def create_figure_Autorinnen(edits=10, interest="all", subject="all"):
+def create_figure_authors(edits=10, interest="all", subject="all"):
     figure = px.line(
         x=one_year_dates(days=365),
         y=[
-            Anzahl_Autorinnen(days2=i, edits=edits, interest=interest, subject=subject)
+            get_number_of_authors(
+                days2=i, edits=edits, interest=interest, subject=subject
+            )
             for i in new_range(days=365)
         ],
         title="Autor*Innen / 90 Tage",
@@ -677,16 +673,16 @@ def create_figure_Autorinnen(edits=10, interest="all", subject="all"):
     ],
 )
 def update_figure(var_1, var_2, var_3):
-    figure = create_figure_Autorinnen(var_1, var_2, var_3)
+    figure = create_figure_authors(var_1, var_2, var_3)
 
     return figure
 
 
-def create_figure_Bearbeitungen(interest="all", subject="all"):
+def create_figure_edits(interest="all", subject="all"):
     figure = px.line(
         x=one_year_dates(days=365),
         y=[
-            Anzahl_aller_Bearbeitungen(days2=i, interest=interest, subject=subject)
+            get_number_of_all_edits(days2=i, interest=interest, subject=subject)
             for i in new_range(days=365)
         ],
         title="Bearbeitungen / 90 Tage",
@@ -700,16 +696,16 @@ def create_figure_Bearbeitungen(interest="all", subject="all"):
     [Input("interest-selector", "value"), Input("subject-selector", "value")],
 )
 def update_figure(var_1, var_2):
-    figure = create_figure_Bearbeitungen(var_1, var_2)
+    figure = create_figure_edits(var_1, var_2)
 
     return figure
 
 
-def create_figure_Inhalte(interest="all"):
+def create_figure_content(interest="all"):
     figure = px.line(
         x=one_year_dates(days=365),
         y=[
-            Anzahl_erstellter_Inhalte(days2=i, interest=interest)
+            get_number_of_created_contents(days2=i, interest=interest)
             for i in new_range(days=365)
         ],
         title="erstellte Inhalte / 90 Tage",
@@ -720,7 +716,7 @@ def create_figure_Inhalte(interest="all"):
 
 @app.callback(Output("graph_3", "figure"), [Input("interest-selector", "value")])
 def update_figure(var):
-    figure = create_figure_Inhalte(var)
+    figure = create_figure_content(var)
 
     return figure
 
@@ -730,12 +726,11 @@ graph_Row = dbc.Row(
 )
 
 app.layout = html.Div(
-    [header, KPI_Row, graph_Row],
+    [header, kpi_row, graph_Row],
     style={"backgroundColor": "white"}
     # style={'backgroundColor':'#F7C8E0'}
 )
 
 
-# Run the app
 if __name__ == "__main__":
     app.run_server(host="0.0.0.0", port=8050, debug=True)
