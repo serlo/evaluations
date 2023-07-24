@@ -13,11 +13,11 @@ function main {
 }
 
 function tear_down {
-	docker-compose down
+	docker compose down
 }
 
 function start_mysql {
-	docker-compose up --detach
+	docker compose up --detach
 }
 
 function import_anonymous_data {
@@ -40,12 +40,12 @@ function import_anonymous_data {
 	               IGNORE 1 ROWS;" serlo
 	echo "Let's wait for the postgres database to be ready"
 	sleep 30
-	docker-compose exec -T postgres psql --user serlo kratos < "${TMP_DIR}/kratos.sql"
+	docker compose exec -T postgres psql --user serlo kratos < "${TMP_DIR}/kratos.sql"
 	rm -r ${TMP_DIR}
 }
 
 function exec_mysql {
-	docker-compose exec -T mysql mysql --user=root --password=secret "$@"
+	docker compose exec -T mysql mysql --user=root --password=secret "$@"
 }
 
 init
