@@ -1,4 +1,5 @@
 data/private
+jupyter/
 
 # IDEs
 .vscode
