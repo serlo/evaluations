@@ -17,6 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.GCP_KEY_CONTAINER_REGISTRY }}'
+
+      - uses: google-github-actions/setup-gcloud@v1
+      - run: gcloud auth configure-docker
+
       - uses: serlo/configure-repositories/actions/setup-mysql@main
       
       - run: ./scripts/mysql/import_anonymous_data.sh
