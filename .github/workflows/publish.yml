@@ -1,0 +1,61 @@
+name: Publish certain notebooks
+
+on:
+  push:
+    branches: ['main', 'automatic-notebook']
+    paths:
+        - 'src/Community-Statistik-inkl-Aktivierungsrate.ipynb'
+
+  workflow_dispatch:
+
+  schedule:
+    - cron: '0 9 * * THU'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4.7.0
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Export notebooks
+        run: | 
+          export JUPYTER_CONFIG_DIR=./jupyter
+          jupyter nbconvert src/Community-Statistik-inkl-Aktivierungsrate.ipynb --execute --to html
+
+      - name: Prepare public folder
+        id: folder
+        run: |
+          mkdir public
+          cp src/*.html public
+          echo "name=public" >> $GITHUB_OUTPUT
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v2
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ${{ steps.folder.outputs.name }}
+  deploy:
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
