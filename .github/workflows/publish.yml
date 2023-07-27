@@ -16,10 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
+      - uses: serlo/configure-repositories/actions/setup-mysql@main
+      
       - uses: actions/setup-python@v4.7.0
         with:
-          python-version: '3.10'
+          python-version: '3.11'
           cache: 'pip'
 
       - name: Install requirements
