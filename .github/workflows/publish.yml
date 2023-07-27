@@ -16,8 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: serlo/configure-repositories/actions/setup-mysql@main
       
+      - run: ./scripts/mysql/import_anonymous_data.sh
+        shell: bash
+
       - uses: actions/setup-python@v4.7.0
         with:
           python-version: '3.11'
