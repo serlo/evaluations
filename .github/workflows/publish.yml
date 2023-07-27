@@ -3,8 +3,8 @@ name: Publish certain notebooks
 on:
   push:
     branches: ['main', 'automatic-notebook']
-    paths:
-        - 'src/Community-Statistik-inkl-Aktivierungsrate.ipynb'
+    # paths:
+    #     - 'src/Community-Statistik-inkl-Aktivierungsrate.ipynb'
 
   workflow_dispatch:
 
