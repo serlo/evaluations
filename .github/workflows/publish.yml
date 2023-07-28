@@ -2,7 +2,8 @@ name: Publish certain notebooks
 
 on:
   push:
-    branches: ['main', 'automatic-notebook']
+    branches: ['main']
+    # TODO: uncomment when it works in main
     # paths:
     #     - 'src/Community-Statistik-inkl-Aktivierungsrate.ipynb'
 
