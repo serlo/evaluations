@@ -8,7 +8,6 @@ function init {
 
 	start_mysql
 	./scripts/mysql/import_anonymous_data.sh
-	import_anonymous_data
 }
 
 function main {
