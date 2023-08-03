@@ -15,6 +15,8 @@ LATEST_DUMP=$(gsutil ls -l gs://anonymous-data \
 gsutil cp "${LATEST_DUMP}" "${TMP_DUMP}"
 unzip -d "${TMP_DIR}" "${TMP_DUMP}"
 
+echo "Let's wait for the mysql database to be ready"
+sleep 30
 exec_mysql serlo < "${TMP_DIR}/mysql.sql"
 docker cp "${TMP_DIR}/user.csv" $(docker-compose ps -q mysql):/
 exec_mysql -e "LOAD DATA LOCAL INFILE 'user.csv' INTO TABLE user \
