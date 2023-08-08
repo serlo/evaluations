@@ -23,6 +23,6 @@ exec_mysql -e "LOAD DATA LOCAL INFILE 'user.csv' INTO TABLE user \
 				FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' \
 				IGNORE 1 ROWS;" serlo
 echo "Let's wait for the postgres database to be ready"
-sleep 30
+sleep 20
 docker compose exec -T postgres psql --user serlo kratos < "${TMP_DIR}/kratos.sql"
 rm -r ${TMP_DIR}
