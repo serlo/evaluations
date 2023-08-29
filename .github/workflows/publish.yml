@@ -50,7 +50,7 @@ jobs:
       - name: Export notebooks
         run: | 
           export JUPYTER_CONFIG_DIR=./jupyter
-          jupyter nbconvert src/Community-Statistik+KPI-Uebersicht.ipynb --execute --to html
+          jupyter nbconvert src/Community-Statistik-inkl-Aktivierungsrate.ipynb --execute --to html
 
       - name: Prepare public folder
         id: folder
