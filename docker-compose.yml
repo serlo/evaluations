@@ -4,6 +4,7 @@ services:
   mysql:
     platform: linux/amd64
     image: eu.gcr.io/serlo-shared/serlo-mysql-database:latest
+    pull_policy: always
     ports:
       - "3306:3306"
       - "33060:33060"
