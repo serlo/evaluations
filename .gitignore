@@ -1,6 +1,9 @@
 data/private
 jupyter/
 
+# MacOS
+.DS_Store
+
 # IDEs
 .vscode
 
