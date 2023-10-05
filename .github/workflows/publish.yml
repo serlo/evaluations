@@ -50,7 +50,7 @@ jobs:
       - name: Export notebooks
         run: |
           jupyter nbconvert src/Community-Statistik-inkl-Aktivierungsrate.ipynb --execute --to html
-          jupyter nbconvert src/evaluations/analysis-of-our-trello-board.ipynb --execute --to html
+          jupyter nbconvert src/analysis-of-our-trello-board.ipynb --execute --to html
         env:
           JUPYTER_CONFIG_DIR: ./jupyter
           TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
