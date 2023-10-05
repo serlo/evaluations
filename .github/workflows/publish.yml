@@ -57,11 +57,9 @@ jobs:
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
 
       - name: Prepare public folder
-        id: folder
         run: |
           mkdir public
           cp src/*.html public
-          echo "name=public" >> $GITHUB_OUTPUT
 
       - name: Setup Pages
         id: pages
@@ -70,7 +68,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ${{ steps.folder.outputs.name }}
+          path: public
   deploy:
     permissions:
       pages: write
