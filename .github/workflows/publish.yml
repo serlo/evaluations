@@ -17,6 +17,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      JUPYTER_CONFIG_DIR: ./jupyter
     steps:
       - uses: actions/checkout@v3
 
@@ -32,7 +34,7 @@ jobs:
 
       - run: docker compose up --detach
         shell: bash
-      
+
       - run: ./scripts/mysql/wait-for-mysql.sh
         shell: bash
 
@@ -48,8 +50,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Export notebooks
-        run: | 
-          export JUPYTER_CONFIG_DIR=./jupyter
+        run: |
           jupyter nbconvert src/Community-Statistik-inkl-Aktivierungsrate.ipynb --execute --to html
 
       - name: Prepare public folder
