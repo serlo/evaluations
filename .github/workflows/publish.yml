@@ -33,10 +33,10 @@ jobs:
       - run: docker compose up --detach
         shell: bash
 
-      - run: ./scripts/mysql/wait-for-mysql.sh
+      - run: ./scripts/wait-for-mysql.sh
         shell: bash
 
-      - run: ./scripts/mysql/import_anonymous_data.sh
+      - run: ./scripts/import_anonymous_data.sh
         shell: bash
 
       - uses: actions/setup-python@v4.7.0
