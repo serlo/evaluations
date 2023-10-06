@@ -1,5 +1,5 @@
 jupyter
-pandas
+pandas~=2.0.0
 requests
 matplotlib
 mysql-connector-python
