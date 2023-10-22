@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  mysql:
+    platform: linux/amd64
+    image: eu.gcr.io/serlo-shared/serlo-mysql-database:latest
+    pull_policy: always
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+  postgres:
+    platform: linux/amd64
+    image: postgres:9.6
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=serlo
+      - POSTGRES_PASSWORD=secret
+      - PGPASSWORD=secret
+      - POSTGRES_DB=kratos
