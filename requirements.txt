@@ -6,6 +6,7 @@ mysql-connector-python
 gsutil
 psycopg2-binary
 SQLAlchemy
+sqlglot
 plotly
 seaborn
 kaleido
