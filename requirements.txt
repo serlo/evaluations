@@ -3,7 +3,6 @@ pandas
 requests
 matplotlib
 mysql-connector-python
-gsutil
 psycopg2-binary
 SQLAlchemy
 plotly
