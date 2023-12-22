@@ -1,10 +1,11 @@
 jupyter
-pandas
+pandas~=2.0.0
 requests
 matplotlib
 mysql-connector-python
 psycopg2-binary
 SQLAlchemy
+sqlglot
 plotly
 seaborn
 kaleido

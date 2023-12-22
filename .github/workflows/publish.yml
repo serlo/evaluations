@@ -32,11 +32,11 @@ jobs:
 
       - run: docker compose up --detach
         shell: bash
-      
-      - run: ./scripts/mysql/wait-for-mysql.sh
+
+      - run: ./scripts/wait-for-mysql.sh
         shell: bash
 
-      - run: ./scripts/mysql/import_anonymous_data.sh
+      - run: ./scripts/import_anonymous_data.sh
         shell: bash
 
       - uses: actions/setup-python@v4.7.0
@@ -48,16 +48,19 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Export notebooks
-        run: | 
-          export JUPYTER_CONFIG_DIR=./jupyter
+        run: |
           jupyter nbconvert src/Community-Statistik-inkl-Aktivierungsrate.ipynb --execute --to html
+          jupyter nbconvert src/Community-Statistik+KPI-Uebersicht.ipynb --execute --to html
+          jupyter nbconvert src/analysis-of-our-trello-board.ipynb --execute --to html
+        env:
+          JUPYTER_CONFIG_DIR: ./jupyter
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
 
       - name: Prepare public folder
-        id: folder
         run: |
           mkdir public
           cp src/*.html public
-          echo "name=public" >> $GITHUB_OUTPUT
 
       - name: Setup Pages
         id: pages
@@ -66,7 +69,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ${{ steps.folder.outputs.name }}
+          path: public
   deploy:
     permissions:
       pages: write

@@ -16,3 +16,17 @@ This repository contains evaluations and data analysis reports about serlo.org.
 
 Run `./mysql.sh` to connect to the mysql database  
 Run `./postgres.sh` to connect to the postgres database
+
+## Common issues
+
+### gsutil
+
+If you have installed `gsutil` in your machine before, after cloning and setting
+up this repo, you may get the error
+
+> ServiceException: 401 Anonymous caller does not have storage.objects.list
+> access to the Google Cloud Storage bucket. Permission 'storage.objects.list'
+> denied on resource (or it may not exist)
+
+For that, do `pip uninstall gsutil` to continue using your usual, authenticated
+`gsutil`.

@@ -1,7 +1,7 @@
 data/private
 jupyter/
 
-# macOS
+# MacOS
 .DS_Store
 
 # IDEs
