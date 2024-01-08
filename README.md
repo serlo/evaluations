@@ -8,7 +8,8 @@ This repository contains evaluations and data analysis reports about serlo.org.
 2. Install `python` version 3.x, `docker` and `docker-compose`.
 3. Install dependencies from [`requirements.txt`](./requirements.txt), e.g. via
    `pip install -r requirements.txt`
-4. Run [`jupyter_notebook.sh`](./jupyter_notebook.sh) to start a local database
+4. If you don't already have it, [install gsutil](https://cloud.google.com/storage/docs/gsutil_install) for pulling database dumps from Google Storage
+5. Run [`jupyter_notebook.sh`](./jupyter_notebook.sh) to start a local database
    with anonymous data from serlo.org and a jupyter notebook.
 
 ## Others

@@ -3,7 +3,6 @@ pandas~=2.0.0
 requests
 matplotlib
 mysql-connector-python
-gsutil
 psycopg2-binary
 SQLAlchemy
 sqlglot
