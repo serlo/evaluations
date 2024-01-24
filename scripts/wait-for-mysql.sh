@@ -11,7 +11,7 @@ main() {
     fi
 
     if test $(expr $(current_timestamp) - $START_TIMESTAMP) -gt $WAIT_TIMEOUT; then
-      error "Timeout: The server has not be started"
+      error "Timeout: The server has not been started"
     fi
 
     sleep 1
