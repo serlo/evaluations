@@ -1,7 +1,7 @@
 services:
   mysql:
     platform: linux/amd64
-    image: eu.gcr.io/serlo-shared/serlo-mysql-database:latest
+    image: eu.gcr.io/serlo-shared/serlo-mysql-database:prerelease-entityfield-coursepage-event-taxonomy
     pull_policy: always
     ports:
       - "3306:3306"
