@@ -7,7 +7,7 @@ function init {
 	trap tear_down EXIT
 
 	start_mysql
-	./scripts/import_anonymous_data.sh
+#	./scripts/import_anonymous_data.sh
 }
 
 function main {
