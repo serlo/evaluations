@@ -6,7 +6,7 @@ source scripts/utils.sh
 
 TMP_DIR=$(mktemp -d -t serlo-anonymous-dataXXXXXX)
 TMP_DUMP="${TMP_DIR}/dump.zip"
-LATEST_DUMP=$(gsutil ls -l gs://anonymous-data \
+LATEST_DUMP=$(gsutil ls -l gs://anonymous-dump \
 	| grep dump \
 	| sort -rk 2 \
 	| head -n 1 \
