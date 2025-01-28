@@ -18,7 +18,7 @@ unzip -d "${TMP_DIR}" "${TMP_DUMP}"
 echo "Let's wait for the mysql database to be ready"
 sleep 30
 exec_mysql serlo < "${TMP_DIR}/mysql.sql"
-docker cp "${TMP_DIR}/user.csv" $(docker-compose ps -q mysql):/
+docker cp "${TMP_DIR}/user.csv" $(docker compose ps -q mysql):/
 exec_mysql -e "LOAD DATA LOCAL INFILE 'user.csv' INTO TABLE user \
 				FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' \
 				IGNORE 1 ROWS;" serlo
